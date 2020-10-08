@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildStrategies.FileManager.Core", "src\WildStrategies.FileManager.Core\WildStrategies.FileManager.Core.csproj", "{9EF69C48-B20F-4CA1-81FA-0A48818AEA97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildStrategies.FileManager.Azure", "src\WildStrategies.FileManager.Azure\WildStrategies.FileManager.Azure.csproj", "{57DE028F-D9BE-442E-B949-E27811C750EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{242B8F78-68E3-4FB1-9486-ADD612413A45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildStrategies.FileManager.Tests", "tests\WildStrategies.FileManager.Tests\WildStrategies.FileManager.Tests.csproj", "{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildStrategies.FileManager.AWSS3", "src\WildStrategies.FileManager.AWSS3\WildStrategies.FileManager.AWSS3.csproj", "{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EF69C48-B20F-4CA1-81FA-0A48818AEA97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF69C48-B20F-4CA1-81FA-0A48818AEA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF69C48-B20F-4CA1-81FA-0A48818AEA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF69C48-B20F-4CA1-81FA-0A48818AEA97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57DE028F-D9BE-442E-B949-E27811C750EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57DE028F-D9BE-442E-B949-E27811C750EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57DE028F-D9BE-442E-B949-E27811C750EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57DE028F-D9BE-442E-B949-E27811C750EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9} = {242B8F78-68E3-4FB1-9486-ADD612413A45}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C27C5728-2FB7-4E6A-BD39-4B61D49FB4B0}
+	EndGlobalSection
+EndGlobal
