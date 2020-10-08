@@ -1,0 +1,15 @@
+{
+    "commands": {
+      "Start dockers": {
+        "FileName": "docker-compose.exe",
+        "WorkingDirectory": "./assets/development",
+        "Arguments": "up"
+      },
+      "Stop dockers": {
+        "FileName": "docker-compose.exe",
+        "WorkingDirectory": "./assets/development",
+        "Arguments": "rm -f -v -s"
+      }
+    }
+  }
+  

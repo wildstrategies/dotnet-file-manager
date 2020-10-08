@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  azure-data-storage:
+    image: mcr.microsoft.com/azure-storage/azurite:latest   
+    volumes:
+    - ../../.local/azurite:/data
+    ports:
+    - '10000:10000'
+    - '10001:10001'
+    restart: 'no'

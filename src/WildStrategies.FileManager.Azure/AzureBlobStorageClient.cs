@@ -30,24 +30,26 @@ namespace WildStrategies.FileManager
         //private readonly BlobServiceClient serviceClient;
         private readonly StorageSharedKeyCredential Credentials;
         private readonly BlobContainerClient containerClient;
+        private readonly BlobServiceClient serviceClient;
 
         private readonly TimeSpan TemporaryUrlExpireTime;
 
         public AzureBlobStorageClient(AzureBlobFileManagerSettings settings)
         {
             Credentials = new StorageSharedKeyCredential(settings.AccountName, settings.AccountKey);
-            containerClient = new BlobServiceClient(settings.StorageUri, Credentials).GetBlobContainerClient(settings.ContainerName);
+            serviceClient = new BlobServiceClient(settings.StorageUri, Credentials);
+            containerClient = serviceClient.GetBlobContainerClient(settings.ContainerName);
             TemporaryUrlExpireTime = TimeSpan.FromSeconds(settings.TemporaryUrlExpireTime);
         }
 
         public IAsyncEnumerable<BlobItem> SearchFiles(string prefix) => containerClient.GetBlobsAsync(prefix: prefix, traits: BlobTraits.All);
 
-        public Task<Uri> GetFileUriAsync(string fileName, string contentDisposition = null)
+        public Task<Uri> GetFileUriAsync(string fileName, TimeSpan? expiryTime, string contentDisposition)
         {
             BlobSasBuilder builder = new BlobSasBuilder()
             {
                 StartsOn = DateTimeOffset.UtcNow.AddSeconds(-2),
-                ExpiresOn = DateTimeOffset.UtcNow.Add(TemporaryUrlExpireTime),
+                ExpiresOn = DateTimeOffset.UtcNow.Add(expiryTime ?? TemporaryUrlExpireTime),
                 ContentDisposition = contentDisposition,
                 BlobContainerName = containerClient.Name,
                 BlobName = fileName
@@ -59,6 +61,9 @@ namespace WildStrategies.FileManager
                 new Uri($"{containerClient.GetBlobClient(fileName).Uri}?{builder.ToSasQueryParameters(Credentials)}")
             );
         }
+
+        public Task<bool> DeleteFileAsync(string fileName)
+            => containerClient.GetBlobClient(fileName).DeleteIfExistsAsync().ContinueWith(res => res.Result.Value);
 
 
         //public Task<BlobItem> GetFileAsync(string bucketName, string fileName) => GetFilesAsync(bucketName, fileName)

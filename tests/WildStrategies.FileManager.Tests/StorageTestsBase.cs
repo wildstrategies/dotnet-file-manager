@@ -44,14 +44,14 @@ namespace WildStrategies.FileManager.Tests
         [TestMethod]
         public async Task GetFileUri()
         {
-            var file = await service.GetFileUri((await GetFirstFile()).FullName, true);
+            var file = await service.GetFileUri((await GetFirstFile()).FullName, toDownload: true);
             Assert.IsNotNull(file);
         }
 
         [TestMethod]
         public async Task GetFileUriNoDownload()
         {
-            var file = await service.GetFileUri((await GetFirstFile()).FullName, false);
+            var file = await service.GetFileUri((await GetFirstFile()).FullName, toDownload: false);
             Assert.IsNotNull(file);
         }
     }

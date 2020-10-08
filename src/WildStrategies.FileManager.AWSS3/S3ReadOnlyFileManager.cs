@@ -25,7 +25,7 @@ namespace WildStrategies.FileManager
             throw new NotImplementedException();
         }
 
-        public Task<Uri> GetFileUri(string fileName, bool toDownload)
+        public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true)
         {
             throw new NotImplementedException();
         }

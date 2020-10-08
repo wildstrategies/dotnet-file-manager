@@ -9,9 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildStrategies.FileManager.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{242B8F78-68E3-4FB1-9486-ADD612413A45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildStrategies.FileManager.Tests", "tests\WildStrategies.FileManager.Tests\WildStrategies.FileManager.Tests.csproj", "{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildStrategies.FileManager.Tests", "tests\WildStrategies.FileManager.Tests\WildStrategies.FileManager.Tests.csproj", "{A42A3A43-F9BE-4C83-97D3-3DAA08C5B8B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildStrategies.FileManager.AWSS3", "src\WildStrategies.FileManager.AWSS3\WildStrategies.FileManager.AWSS3.csproj", "{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildStrategies.FileManager.AWSS3", "src\WildStrategies.FileManager.AWSS3\WildStrategies.FileManager.AWSS3.csproj", "{CF45B1A8-F334-43B3-A7DC-EA594B4E1025}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5A013D8-BAD4-46AC-9043-D503ABE521C9}"
+	ProjectSection(SolutionItems) = preProject
+		commands.json = commands.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

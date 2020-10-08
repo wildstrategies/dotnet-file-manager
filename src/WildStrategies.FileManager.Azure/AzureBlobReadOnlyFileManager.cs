@@ -4,18 +4,14 @@ using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager
 {
-
-
     public class AzureBlobReadOnlyFileManager : IReadOnlyFileManager
     {
-        private readonly AzureBlobStorageClient client;
+        internal readonly AzureBlobStorageClient client;
 
         public AzureBlobReadOnlyFileManager(AzureBlobFileManagerSettings settings)
         {
             client = new AzureBlobStorageClient(settings);
         }
-
-
 
         private async IAsyncEnumerable<FileObject> ListFilesFromAzure(string prefix)
         {
@@ -38,11 +34,10 @@ namespace WildStrategies.FileManager
             throw new Exception();
         }
 
-
-
-        public Task<Uri> GetFileUri(string fileName, bool toDownload) =>
+        public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true) =>
             client.GetFileUriAsync(
                 fileName,
+                expiryTime,
                 toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null
             );
     }
