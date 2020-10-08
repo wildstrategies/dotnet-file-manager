@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Azure.Storage.Sas;
 
 namespace WildStrategies.FileManager
 {
@@ -19,7 +15,7 @@ namespace WildStrategies.FileManager
             client = new AzureBlobStorageClient(settings);
         }
 
-        
+
 
         private async IAsyncEnumerable<FileObject> ListFilesFromAzure(string prefix)
         {
@@ -46,7 +42,7 @@ namespace WildStrategies.FileManager
 
         public Task<Uri> GetFileUri(string fileName, bool toDownload) =>
             client.GetFileUriAsync(
-                fileName, 
+                fileName,
                 toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null
             );
     }

@@ -1,7 +1,6 @@
 ﻿using Amazon.S3;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager
@@ -9,8 +8,8 @@ namespace WildStrategies.FileManager
     public class S3ReadOnlyFileManager : IReadOnlyFileManager
     {
         private readonly AmazonS3Client client = new AmazonS3Client(
-            "AKIAIOSFODNN7EXAMPLE",
-            "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "accessKey",
+            "accessSecret",
             new AmazonS3Config()
             {
                 ServiceURL = "http://localhost:9444",
