@@ -23,22 +23,14 @@ namespace WildStrategies.FileManager
 
         public IAsyncEnumerable<FileObject> ListFiles() => ListFilesFromAzure(null);
         public IAsyncEnumerable<FileObject> ListFiles(string folder) => ListFilesFromAzure(folder);
-        public async Task<FileObject> GetFile(string fileName)
-        {
-            var enumerator = ListFilesFromAzure(fileName).GetAsyncEnumerator();
-            if (await enumerator.MoveNextAsync())
-            {
-                return enumerator.Current;
-            }
-
-            throw new Exception();
-        }
-
+        public Task<FileObject> GetFile(string fileName) => client.GetFile(fileName);
         public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true) =>
             client.GetFileUriAsync(
                 fileName,
                 expiryTime,
                 toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null
             );
+
+        public Task<IEnumerable<KeyValuePair<string, string>>> GetFileMetadata(string fileName) => client.GetBlobMetadata(fileName);
     }
 }

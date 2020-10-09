@@ -31,6 +31,7 @@ namespace WildStrategies.FileManager.Tests
         {
             TestContext = context;
             Configuration = new ConfigurationBuilder()
+                .AddJsonFile("settings.json", true)
                 .AddUserSecrets(Assembly.GetExecutingAssembly())
                 .Build();
         }

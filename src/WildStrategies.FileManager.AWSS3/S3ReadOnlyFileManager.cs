@@ -1,54 +1,93 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
+using Amazon.S3.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager
 {
     public class S3ReadOnlyFileManager : IReadOnlyFileManager
     {
-        private readonly AmazonS3Client client = new AmazonS3Client(
-            "accessKey",
-            "accessSecret",
-            new AmazonS3Config()
-            {
-                ServiceURL = "http://localhost:9444",
-                ForcePathStyle = true
-            });
+        private readonly AmazonS3Client client;
+        private readonly TimeSpan TemporaryUrlExpireTime;
+        private readonly string bucketName;
 
-        public S3ReadOnlyFileManager()
+        public S3ReadOnlyFileManager(S3FilManagerSettings settings)
         {
+            client = new AmazonS3Client(
+                settings.AccessKey,
+                settings.SecretAccessKey,
+                Amazon.RegionEndpoint.EnumerableAllRegions.First(x => x.SystemName.Equals(settings.RegionName, StringComparison.InvariantCultureIgnoreCase))
+            );
+
+            bucketName = settings.BucketName;
+            TemporaryUrlExpireTime = TimeSpan.FromSeconds(settings.TemporaryUrlExpireTime);
         }
 
-        public Task<FileObject> GetFile(string fileName)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<FileObject> GetFile(string fileName) => ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.First().ToFileObject());
 
         public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true)
         {
-            throw new NotImplementedException();
+            var request = new GetPreSignedUrlRequest()
+            {
+                BucketName = bucketName,
+                Key = fileName,
+                Expires = DateTime.UtcNow.Add(expiryTime ?? TemporaryUrlExpireTime),
+            };
+
+            request.ResponseHeaderOverrides.ContentDisposition = toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null;
+            return Task.FromResult(new Uri(client.GetPreSignedURL(request)));
         }
 
-        public async IAsyncEnumerable<FileObject> ListFiles()
+        private Task<ListObjectsV2Response> ListFilesFromAws(string prefix = null, string continuationToken = null) => client.ListObjectsV2Async(new Amazon.S3.Model.ListObjectsV2Request()
         {
-            var output = await client.ListObjectsV2Async(new Amazon.S3.Model.ListObjectsV2Request()
-            {
-                BucketName = "test-bucket",
-            });
+            BucketName = bucketName,
+            ContinuationToken = continuationToken,
+            Prefix = prefix
+        });
 
-            foreach (var file in output.S3Objects)
+        public IAsyncEnumerable<FileObject> ListFiles() => ListFiles(null);
+
+        public async IAsyncEnumerable<FileObject> ListFiles(string folder)
+        {
+            string continuationToken = null;
+            while (true)
             {
-                yield return new FileObject()
+                var response = await ListFilesFromAws(prefix: folder, continuationToken: continuationToken);
+                continuationToken = response.NextContinuationToken;
+
+                foreach (var file in response.S3Objects)
                 {
-                    FullName = file.Key
-                };
+                    if (!file.Key.EndsWith("/"))
+                    {
+                        yield return new FileObject()
+                        {
+                            FullName = file.Key
+                        };
+                    }
+                }
+
+                if (continuationToken == null)
+                    break;
             }
         }
 
-        public IAsyncEnumerable<FileObject> ListFiles(string folder)
+        public Task<IEnumerable<KeyValuePair<string, string>>> GetFileMetadata(string fileName) => client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
         {
-            throw new NotImplementedException();
-        }
+            BucketName = bucketName,
+            Key = fileName
+        }).ContinueWith(task =>
+        {
+            Dictionary<string, string> output = new Dictionary<string, string>();
+
+            foreach (var key in task.Result.Metadata.Keys)
+            {
+                output.Add(key, task.Result.Metadata[key]);
+            }
+
+            return output.AsEnumerable();
+        });
     }
 }

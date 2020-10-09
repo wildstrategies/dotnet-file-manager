@@ -2,28 +2,13 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
-using NodaTime;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager
 {
-    public static class AzureBlobExtensions
-    {
-        public static FileObject ToFileObject(this BlobItem item)
-        {
-            return new FileObject()
-            {
-                Abstract = item.Metadata != null && item.Metadata.ContainsKey("Abstract") ? item.Metadata["Abstract"] : null,
-                ContentType = item.Properties.ContentType,
-                CreatedTime = Instant.FromDateTimeOffset(item.Properties.CreatedOn.GetValueOrDefault()),
-                LastUpdateTime = Instant.FromDateTimeOffset(item.Properties.LastModified.GetValueOrDefault()),
-                FullName = item.Name,
-                Size = item.Properties.ContentLength.GetValueOrDefault()
-            };
-        }
-    }
 
     internal class AzureBlobStorageClient
     {
@@ -42,7 +27,10 @@ namespace WildStrategies.FileManager
             TemporaryUrlExpireTime = TimeSpan.FromSeconds(settings.TemporaryUrlExpireTime);
         }
 
-        public IAsyncEnumerable<BlobItem> SearchFiles(string prefix) => containerClient.GetBlobsAsync(prefix: prefix, traits: BlobTraits.All);
+        public IAsyncEnumerable<BlobItem> SearchFiles(string prefix) => containerClient.GetBlobsAsync(prefix: prefix, traits: BlobTraits.None);
+
+        public Task<FileObject> GetFile(string fileName) => containerClient.GetBlobClient(fileName).GetPropertiesAsync()
+            .ContinueWith(task => task.Result.Value.ToFileObject(fileName));
 
         public Task<Uri> GetFileUriAsync(string fileName, TimeSpan? expiryTime, string contentDisposition)
         {
@@ -61,6 +49,9 @@ namespace WildStrategies.FileManager
                 new Uri($"{containerClient.GetBlobClient(fileName).Uri}?{builder.ToSasQueryParameters(Credentials)}")
             );
         }
+
+        public Task<IEnumerable<KeyValuePair<string, string>>> GetBlobMetadata(string fileName) => 
+            containerClient.GetBlobClient(fileName).GetPropertiesAsync().ContinueWith(task => task.Result.Value.Metadata.AsEnumerable());
 
         public Task<bool> DeleteFileAsync(string fileName)
             => containerClient.GetBlobClient(fileName).DeleteIfExistsAsync().ContinueWith(res => res.Result.Value);

@@ -1,5 +1,6 @@
 ﻿using NodaTime;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace WildStrategies.FileManager
@@ -22,7 +23,7 @@ namespace WildStrategies.FileManager
 
         public static string FileExtension(this FileObject fileObject) => Path.GetExtension(fileObject.FullName)?.Replace(".", "")?.ToLower(System.Globalization.CultureInfo.InvariantCulture);
         public static string FileName(this FileObject fileObject) => Path.GetFileName(fileObject.FullName);
-        public static string FilePath(this FileObject fileObject) => Path.GetDirectoryName(fileObject.FullName);
+        public static string FilePath(this FileObject fileObject) => Path.GetDirectoryName(fileObject.FullName).Replace("\\","/");
     }
 
     public class FileObject
@@ -30,7 +31,6 @@ namespace WildStrategies.FileManager
         public string FullName { get; set; }
         public string ContentType { get; set; }
         public long Size { get; set; }
-        public string Abstract { get; set; }
         public Instant CreatedTime { get; set; }
         public Instant LastUpdateTime { get; set; }
     }

@@ -1,0 +1,9 @@
+{
+  "azure": {
+    "AccountKey": "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==",
+    "AccountName": "devstoreaccount1",
+    "StorageUri": "http://127.0.0.1:10000",
+    "ContainerName": "ws-filemanager",
+    "TemporaryUrlExpireTime": "180"
+  }
+}

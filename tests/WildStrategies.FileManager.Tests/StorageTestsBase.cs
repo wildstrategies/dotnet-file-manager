@@ -42,6 +42,13 @@ namespace WildStrategies.FileManager.Tests
         }
 
         [TestMethod]
+        public async Task GetFileMetadata()
+        {
+            var metadata = await service.GetFileMetadata((await GetFirstFile()).FullName);
+            Assert.IsNotNull(metadata);
+        }
+
+        [TestMethod]
         public async Task GetFileUri()
         {
             var file = await service.GetFileUri((await GetFirstFile()).FullName, toDownload: true);

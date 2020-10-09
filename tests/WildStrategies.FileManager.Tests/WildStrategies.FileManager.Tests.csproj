@@ -24,4 +24,10 @@
 		<ProjectReference Include="..\..\src\WildStrategies.FileManager.Azure\WildStrategies.FileManager.Azure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="settings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
