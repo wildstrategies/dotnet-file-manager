@@ -11,7 +11,7 @@ namespace WildStrategies.FileManager.Tests
         public static async Task<List<FileObject>> ToList(this IAsyncEnumerable<FileObject> files)
         {
             List<FileObject> output = new List<FileObject>();
-            await foreach (var file in files)
+            await foreach (FileObject file in files)
             {
                 output.Add(file);
             }

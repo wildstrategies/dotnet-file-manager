@@ -9,7 +9,7 @@ namespace WildStrategies.FileManager
         IAsyncEnumerable<FileObject> ListFiles();
         IAsyncEnumerable<FileObject> ListFiles(string folder);
         Task<FileObject> GetFile(string fileName);
-        Task<IEnumerable<KeyValuePair<string, string>>> GetFileMetadata(string fileName);
+        Task<FileObjectMetadataCollection> GetFileMetadata(string fileName);
         Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true);
     }
 }

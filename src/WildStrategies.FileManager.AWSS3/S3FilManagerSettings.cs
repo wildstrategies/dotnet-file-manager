@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WildStrategies.FileManager
+﻿namespace WildStrategies.FileManager
 {
     public class S3FilManagerSettings
     {

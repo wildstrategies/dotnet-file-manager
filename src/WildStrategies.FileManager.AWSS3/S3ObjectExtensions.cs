@@ -1,8 +1,5 @@
 ﻿using Amazon.S3.Model;
 using NodaTime;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WildStrategies.FileManager
 {

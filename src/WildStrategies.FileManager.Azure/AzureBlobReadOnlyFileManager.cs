@@ -15,7 +15,7 @@ namespace WildStrategies.FileManager
 
         private async IAsyncEnumerable<FileObject> ListFilesFromAzure(string prefix)
         {
-            await foreach (var file in client.SearchFiles(prefix))
+            await foreach (Azure.Storage.Blobs.Models.BlobItem file in client.SearchFiles(prefix))
             {
                 yield return file.ToFileObject();
             }
@@ -31,6 +31,8 @@ namespace WildStrategies.FileManager
                 toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null
             );
 
-        public Task<IEnumerable<KeyValuePair<string, string>>> GetFileMetadata(string fileName) => client.GetBlobMetadata(fileName);
+        public Task<FileObjectMetadataCollection> GetFileMetadata(string fileName) =>
+            client.GetBlobMetadata(fileName)
+            .ContinueWith(task => new FileObjectMetadataCollection(task.Result), TaskScheduler.Current);
     }
 }

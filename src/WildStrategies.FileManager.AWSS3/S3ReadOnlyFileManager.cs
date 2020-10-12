@@ -1,5 +1,4 @@
-﻿using Amazon;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ namespace WildStrategies.FileManager
 
         public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true)
         {
-            var request = new GetPreSignedUrlRequest()
+            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
             {
                 BucketName = bucketName,
                 Key = fileName,
@@ -55,10 +54,10 @@ namespace WildStrategies.FileManager
             string continuationToken = null;
             while (true)
             {
-                var response = await ListFilesFromAws(prefix: folder, continuationToken: continuationToken);
+                ListObjectsV2Response response = await ListFilesFromAws(prefix: folder, continuationToken: continuationToken);
                 continuationToken = response.NextContinuationToken;
 
-                foreach (var file in response.S3Objects)
+                foreach (S3Object file in response.S3Objects)
                 {
                     if (!file.Key.EndsWith("/"))
                     {
@@ -74,7 +73,7 @@ namespace WildStrategies.FileManager
             }
         }
 
-        public Task<IEnumerable<KeyValuePair<string, string>>> GetFileMetadata(string fileName) => client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
+        public Task<FileObjectMetadataCollection> GetFileMetadata(string fileName) => client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
         {
             BucketName = bucketName,
             Key = fileName
@@ -82,12 +81,12 @@ namespace WildStrategies.FileManager
         {
             Dictionary<string, string> output = new Dictionary<string, string>();
 
-            foreach (var key in task.Result.Metadata.Keys)
+            foreach (string key in task.Result.Metadata.Keys)
             {
                 output.Add(key, task.Result.Metadata[key]);
             }
 
-            return output.AsEnumerable();
+            return new FileObjectMetadataCollection(output);
         });
     }
 }

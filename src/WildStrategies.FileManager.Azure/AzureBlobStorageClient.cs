@@ -50,7 +50,7 @@ namespace WildStrategies.FileManager
             );
         }
 
-        public Task<IEnumerable<KeyValuePair<string, string>>> GetBlobMetadata(string fileName) => 
+        public Task<IEnumerable<KeyValuePair<string, string>>> GetBlobMetadata(string fileName) =>
             containerClient.GetBlobClient(fileName).GetPropertiesAsync().ContinueWith(task => task.Result.Value.Metadata.AsEnumerable());
 
         public Task<bool> DeleteFileAsync(string fileName)
