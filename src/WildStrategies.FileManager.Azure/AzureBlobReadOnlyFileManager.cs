@@ -21,17 +21,18 @@ namespace WildStrategies.FileManager
             }
         }
 
-        public IAsyncEnumerable<FileObject> ListFiles() => ListFilesFromAzure(null);
-        public IAsyncEnumerable<FileObject> ListFiles(string folder) => ListFilesFromAzure(folder);
-        public Task<FileObject> GetFile(string fileName) => client.GetFile(fileName);
-        public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true) =>
+        public IAsyncEnumerable<FileObject> ListFilesAsync() => ListFilesFromAzure(null);
+        public IAsyncEnumerable<FileObject> ListFilesAsync(string folder) => ListFilesFromAzure(folder);
+        public Task<FileObject> GetFileAsync(string fileName) => client.GetFile(fileName);
+        public Task<Uri> GetDownloadFileUriAsync(string fileName, TimeSpan? expiryTime = null, bool toDownload = true) =>
             client.GetFileUriAsync(
                 fileName,
                 expiryTime,
-                toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null
+                toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null,
+                false
             );
 
-        public Task<FileObjectMetadataCollection> GetFileMetadata(string fileName) =>
+        public Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName) =>
             client.GetBlobMetadata(fileName)
             .ContinueWith(task => new FileObjectMetadataCollection(task.Result), TaskScheduler.Current);
     }

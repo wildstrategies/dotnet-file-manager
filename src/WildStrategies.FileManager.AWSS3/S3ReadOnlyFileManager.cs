@@ -9,9 +9,9 @@ namespace WildStrategies.FileManager
 {
     public class S3ReadOnlyFileManager : IReadOnlyFileManager
     {
-        private readonly AmazonS3Client client;
-        private readonly TimeSpan TemporaryUrlExpireTime;
-        private readonly string bucketName;
+        protected readonly AmazonS3Client client;
+        protected readonly TimeSpan TemporaryUrlExpireTime;
+        protected readonly string bucketName;
 
         public S3ReadOnlyFileManager(S3FilManagerSettings settings)
         {
@@ -25,15 +25,21 @@ namespace WildStrategies.FileManager
             TemporaryUrlExpireTime = TimeSpan.FromSeconds(settings.TemporaryUrlExpireTime);
         }
 
-        public Task<FileObject> GetFile(string fileName) => ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.First().ToFileObject());
+        public Task<FileObject> GetFileAsync(string fileName) => ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.First().ToFileObject());
 
-        public Task<Uri> GetFileUri(string fileName, TimeSpan? expiryTime = null, bool toDownload = true)
+        public Task<Uri> GetDownloadFileUriAsync(string fileName, TimeSpan? expiryTime = null, bool toDownload = true)
         {
+            if (fileName is null)
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
             GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
             {
                 BucketName = bucketName,
                 Key = fileName,
                 Expires = DateTime.UtcNow.Add(expiryTime ?? TemporaryUrlExpireTime),
+                Verb = HttpVerb.GET
             };
 
             request.ResponseHeaderOverrides.ContentDisposition = toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null;
@@ -47,9 +53,9 @@ namespace WildStrategies.FileManager
             Prefix = prefix
         });
 
-        public IAsyncEnumerable<FileObject> ListFiles() => ListFiles(null);
+        public IAsyncEnumerable<FileObject> ListFilesAsync() => ListFilesAsync(null);
 
-        public async IAsyncEnumerable<FileObject> ListFiles(string folder)
+        public async IAsyncEnumerable<FileObject> ListFilesAsync(string folder)
         {
             string continuationToken = null;
             while (true)
@@ -59,7 +65,7 @@ namespace WildStrategies.FileManager
 
                 foreach (S3Object file in response.S3Objects)
                 {
-                    if (!file.Key.EndsWith("/"))
+                    if (!file.Key.EndsWith("/") && !file.Key.EndsWith("_$folder$"))
                     {
                         yield return new FileObject()
                         {
@@ -73,20 +79,28 @@ namespace WildStrategies.FileManager
             }
         }
 
-        public Task<FileObjectMetadataCollection> GetFileMetadata(string fileName) => client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
+        public Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName)
         {
-            BucketName = bucketName,
-            Key = fileName
-        }).ContinueWith(task =>
-        {
-            Dictionary<string, string> output = new Dictionary<string, string>();
-
-            foreach (string key in task.Result.Metadata.Keys)
+            if (fileName is null)
             {
-                output.Add(key, task.Result.Metadata[key]);
+                throw new ArgumentNullException(nameof(fileName));
             }
 
-            return new FileObjectMetadataCollection(output);
-        });
+            return client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
+            {
+                BucketName = bucketName,
+                Key = fileName
+            }).ContinueWith(task =>
+            {
+                Dictionary<string, string> output = new Dictionary<string, string>();
+
+                foreach (string key in task.Result.Metadata.Keys)
+                {
+                    output.Add(key, task.Result.Metadata[key]);
+                }
+
+                return new FileObjectMetadataCollection(output);
+            });
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace WildStrategies.FileManager.Tests
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
-            service = new S3ReadOnlyFileManager(
+            service = new S3FileManager(
                 Utils.Configuration.GetSection("aws").Get<S3FilManagerSettings>()
             );
         }

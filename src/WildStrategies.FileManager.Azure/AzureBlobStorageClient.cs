@@ -32,7 +32,7 @@ namespace WildStrategies.FileManager
         public Task<FileObject> GetFile(string fileName) => containerClient.GetBlobClient(fileName).GetPropertiesAsync()
             .ContinueWith(task => task.Result.Value.ToFileObject(fileName));
 
-        public Task<Uri> GetFileUriAsync(string fileName, TimeSpan? expiryTime, string contentDisposition)
+        public Task<Uri> GetFileUriAsync(string fileName, TimeSpan? expiryTime, string contentDisposition, bool write)
         {
             BlobSasBuilder builder = new BlobSasBuilder()
             {
@@ -43,7 +43,14 @@ namespace WildStrategies.FileManager
                 BlobName = fileName
             };
 
-            builder.SetPermissions(BlobSasPermissions.Read);
+            if (write)
+            {
+                builder.SetPermissions(BlobSasPermissions.Read | BlobSasPermissions.Write);
+            }
+            else
+            {
+                builder.SetPermissions(BlobSasPermissions.Read);
+            }
 
             return Task.FromResult(
                 new Uri($"{containerClient.GetBlobClient(fileName).Uri}?{builder.ToSasQueryParameters(Credentials)}")
