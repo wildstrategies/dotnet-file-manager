@@ -1,16 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>WildStrategies.FileManager</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>WildStrategies.FileManager</RootNamespace>
+		<UserSecretsId>79a3edd0-2092-40a2-a04d-dcb46d5ca9ed</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<MayorNumber Condition=" '$(MayorNumber)' == '' ">0</MayorNumber>
+		<MinorNumber Condition=" '$(MinorNumber)' == '' ">0</MinorNumber>
+		<RevisionNumber Condition=" '$(RevisionNumber)' == '' ">0</RevisionNumber>
+		<BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
+		<VersionPrefix>$(MayorNumber).$(MinorNumber).$(BuildNumber).$(RevisionNumber)</VersionPrefix>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WildStrategies.FileManager.Core\WildStrategies.FileManager.Core.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<PackageId>WildStrategies.FileManager.Azure</PackageId>
+		<Authors>Nicola Luraghi</Authors>
+		<Company>WildStrategies</Company>
+		<RepositoryUrl>https://github.com/wildstrategies/dotnet-file-manager</RepositoryUrl>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WildStrategies.FileManager.Core\WildStrategies.FileManager.Core.csproj" />
+	</ItemGroup>
 
 </Project>
