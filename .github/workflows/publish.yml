@@ -1,11 +1,6 @@
 name: NuGet
 
-on:
-  push:
-    branches:
-      - master
-      - github-actions
-
+on: workflow_dispatch
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
