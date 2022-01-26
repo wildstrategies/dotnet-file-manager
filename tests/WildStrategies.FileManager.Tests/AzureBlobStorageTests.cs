@@ -3,13 +3,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace WildStrategies.FileManager.Tests
 {
-    [TestClass]
+    //[TestClass]
     public class AzureBlobStorageTests : StorageTestsBase
     {
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
-            service = new AzureBlobReadOnlyFileManager(
+            service = new AzureBlobFileManager(
                 Utils.Configuration.GetSection("azure").Get<AzureBlobFileManagerSettings>()
             );
         }

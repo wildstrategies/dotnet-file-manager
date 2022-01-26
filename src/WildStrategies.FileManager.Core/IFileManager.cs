@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager
 {
     public interface IFileManager : IReadOnlyFileManager
     {
-        Task DeleteFile(string fileName);
+        Task DeleteFileAsync(string fileName);
+        Task<Uri> GetUploadFileUriAsync(string fileName, TimeSpan? expiryTime = null);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager
 {
@@ -8,6 +9,14 @@ namespace WildStrategies.FileManager
         {
         }
 
-        public Task DeleteFile(string fileName) => client.DeleteFileAsync(fileName);
+        public Task DeleteFileAsync(string fileName) => client.DeleteFileAsync(fileName);
+
+        public Task<Uri> GetUploadFileUriAsync(string fileName, TimeSpan? expiryTime = null) =>
+            client.GetFileUriAsync(
+                fileName,
+                expiryTime,
+                null,
+                true
+            );
     }
 }
