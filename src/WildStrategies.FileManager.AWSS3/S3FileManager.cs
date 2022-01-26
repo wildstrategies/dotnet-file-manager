@@ -9,7 +9,7 @@ namespace WildStrategies.FileManager
 {
     public class S3FileManager : S3ReadOnlyFileManager, IFileManager
     {
-        public S3FileManager(S3FilManagerSettings settings) : base(settings)
+        public S3FileManager(S3FileManagerSettings settings) : base(settings)
         {
         }
 

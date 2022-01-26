@@ -10,7 +10,7 @@ namespace WildStrategies.FileManager.Tests
         public static void Initialize(TestContext context)
         {
             service = new S3FileManager(
-                Utils.Configuration.GetSection("aws").Get<S3FilManagerSettings>()
+                Utils.Configuration.GetSection("aws").Get<S3FileManagerSettings>()
             );
         }
     }

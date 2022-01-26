@@ -1,6 +1,6 @@
 ﻿namespace WildStrategies.FileManager
 {
-    public class S3FilManagerSettings
+    public class S3FileManagerSettings
     {
         public string AccessKey { get; set; }
         public string SecretAccessKey { get; set; }

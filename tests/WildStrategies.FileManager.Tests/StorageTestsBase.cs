@@ -11,7 +11,7 @@ namespace WildStrategies.FileManager.Tests
     public abstract class StorageTestsBase
     {
         protected static IFileManager service;
-        private static readonly string basePath = ".unit-tests";
+        private static readonly string basePath = "documents/e58495b1-909c-4430-9f45-87f9906c9f59";
         private static readonly HttpClient client = new HttpClient();
         private static readonly Dictionary<Type, FileObject> fileObjects = new Dictionary<Type, FileObject>();
 

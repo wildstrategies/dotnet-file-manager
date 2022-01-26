@@ -13,7 +13,7 @@ namespace WildStrategies.FileManager
         protected readonly TimeSpan TemporaryUrlExpireTime;
         protected readonly string bucketName;
 
-        public S3ReadOnlyFileManager(S3FilManagerSettings settings)
+        public S3ReadOnlyFileManager(S3FileManagerSettings settings)
         {
             client = new AmazonS3Client(
                 settings.AccessKey,
@@ -67,10 +67,7 @@ namespace WildStrategies.FileManager
                 {
                     if (!file.Key.EndsWith("/") && !file.Key.EndsWith("_$folder$"))
                     {
-                        yield return new FileObject()
-                        {
-                            FullName = file.Key
-                        };
+                        yield return file.ToFileObject();
                     }
                 }
 
