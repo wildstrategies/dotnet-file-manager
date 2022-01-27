@@ -1,5 +1,4 @@
 ﻿using Amazon.S3.Model;
-using NodaTime;
 
 namespace WildStrategies.FileManager
 {
@@ -10,8 +9,8 @@ namespace WildStrategies.FileManager
             return new FileObject()
             {
                 ContentType = null,
-                CreatedTime = Instant.FromDateTimeOffset(item.LastModified),
-                LastUpdateTime = Instant.FromDateTimeOffset(item.LastModified),
+                CreatedTime = item.LastModified,
+                LastUpdateTime = item.LastModified,
                 FullName = item.Key,
                 Size = item.Size
             };

@@ -1,4 +1,4 @@
-﻿using NodaTime;
+﻿using System;
 
 namespace WildStrategies.FileManager
 {
@@ -7,7 +7,7 @@ namespace WildStrategies.FileManager
         public string FullName { get; init; }
         public string ContentType { get; init; }
         public long Size { get; init; }
-        public Instant CreatedTime { get; init; }
-        public Instant LastUpdateTime { get; init; }
+        public DateTimeOffset CreatedTime { get; init; }
+        public DateTimeOffset LastUpdateTime { get; init; }
     }
 }
