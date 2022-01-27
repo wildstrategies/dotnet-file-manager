@@ -1,5 +1,4 @@
 ﻿using Azure.Storage.Blobs.Models;
-using NodaTime;
 
 namespace WildStrategies.FileManager
 {
@@ -10,8 +9,8 @@ namespace WildStrategies.FileManager
             return new FileObject()
             {
                 ContentType = item.Properties.ContentType,
-                CreatedTime = Instant.FromDateTimeOffset(item.Properties.CreatedOn.GetValueOrDefault()),
-                LastUpdateTime = Instant.FromDateTimeOffset(item.Properties.LastModified.GetValueOrDefault()),
+                CreatedTime = item.Properties.CreatedOn.GetValueOrDefault(),
+                LastUpdateTime = item.Properties.LastModified.GetValueOrDefault(),
                 FullName = item.Name,
                 Size = item.Properties.ContentLength.GetValueOrDefault()
             };
@@ -22,8 +21,8 @@ namespace WildStrategies.FileManager
             return new FileObject()
             {
                 ContentType = item.ContentType,
-                CreatedTime = Instant.FromDateTimeOffset(item.CreatedOn),
-                LastUpdateTime = Instant.FromDateTimeOffset(item.LastModified),
+                CreatedTime = item.CreatedOn,
+                LastUpdateTime = item.LastModified,
                 FullName = fileName,
                 Size = item.ContentLength
             };
