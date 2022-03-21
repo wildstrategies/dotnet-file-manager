@@ -44,7 +44,7 @@ namespace WildStrategies.FileManager
                 BucketName = bucketName,
                 Key = fileName,
                 Expires = DateTime.UtcNow.Add(expiryTime ?? TemporaryUrlExpireTime),
-                Verb = HttpVerb.PUT
+                Verb = HttpVerb.PUT,
             };
 
             return Task.FromResult(new Uri(client.GetPreSignedURL(request)));

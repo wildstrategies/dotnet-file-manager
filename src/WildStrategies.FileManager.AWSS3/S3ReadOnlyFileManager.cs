@@ -27,7 +27,12 @@ namespace WildStrategies.FileManager
 
         public Task<FileObject> GetFileAsync(string fileName) => ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.First().ToFileObject());
 
-        public Task<Uri> GetDownloadFileUriAsync(string fileName, TimeSpan? expiryTime = null, bool toDownload = true)
+        public Task<Uri> GetDownloadFileUriAsync(
+            string fileName, 
+            TimeSpan? expiryTime = null, 
+            bool toDownload = true,
+            string attachmentFileName = null
+        )
         {
             if (fileName is null)
             {
@@ -42,7 +47,16 @@ namespace WildStrategies.FileManager
                 Verb = HttpVerb.GET
             };
 
-            request.ResponseHeaderOverrides.ContentDisposition = toDownload ? $"attachment; filename={fileName.Substring(fileName.LastIndexOf("/") + 1)}" : null;
+            if (toDownload)
+            {
+                if (string.IsNullOrWhiteSpace(attachmentFileName))
+                {
+                    attachmentFileName = fileName.Substring(fileName.LastIndexOf("/") + 1);
+                }
+
+                request.ResponseHeaderOverrides.ContentDisposition = toDownload ? $"attachment; filename={attachmentFileName}" : null;
+            }
+
             return Task.FromResult(new Uri(client.GetPreSignedURL(request)));
         }
 
