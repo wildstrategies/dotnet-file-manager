@@ -5,6 +5,10 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_ROLL_FORWARD: Major
+
 jobs:
   build:
     name: Code Quality
