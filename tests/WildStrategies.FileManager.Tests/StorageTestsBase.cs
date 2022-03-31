@@ -11,7 +11,7 @@ namespace WildStrategies.FileManager.Tests
     public abstract class StorageTestsBase
     {
         protected static IFileManager service;
-        private static readonly string basePath = "documents/e58495b1-909c-4430-9f45-87f9906c9f59";
+        private static readonly string basePath = ".unit-tests/file-manager";
         private static readonly HttpClient client = new HttpClient();
         private static readonly Dictionary<Type, FileObject> fileObjects = new Dictionary<Type, FileObject>();
 
@@ -45,6 +45,21 @@ namespace WildStrategies.FileManager.Tests
         {
             FileObject file = await service.GetFileAsync((await GetFirstFile()).FullName);
             Assert.IsNotNull(file);
+        }
+
+        [TestMethod]
+        public async Task FileExistsAsync()
+        {
+            FileObject file = await service.GetFileAsync((await GetFirstFile()).FullName);
+            var exists = await service.FileExistsAsync(file.FullName);
+            Assert.IsTrue(exists);
+        }
+
+        [TestMethod]
+        public async Task FileNotExistsAsync()
+        {
+            var exists = await service.FileExistsAsync("8HBfJJtPs86fd1yWJYstszAkLwzw.fne");
+            Assert.IsFalse(exists);
         }
 
         [TestMethod]

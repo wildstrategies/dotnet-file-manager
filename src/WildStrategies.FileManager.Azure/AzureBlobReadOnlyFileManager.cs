@@ -54,5 +54,7 @@ namespace WildStrategies.FileManager
         public Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName) =>
             client.GetBlobMetadata(fileName)
             .ContinueWith(task => new FileObjectMetadataCollection(task.Result), TaskScheduler.Current);
+
+        public Task<bool> FileExistsAsync(string fileName) => client.FileExistsAsync(fileName);
     }
 }
