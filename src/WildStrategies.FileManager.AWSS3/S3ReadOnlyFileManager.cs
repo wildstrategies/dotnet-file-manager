@@ -54,7 +54,7 @@ namespace WildStrategies.FileManager
                     attachmentFileName = fileName.Substring(fileName.LastIndexOf("/") + 1);
                 }
 
-                request.ResponseHeaderOverrides.ContentDisposition = toDownload ? $"attachment; filename={attachmentFileName}" : null;
+                request.ResponseHeaderOverrides.ContentDisposition = $"attachment; filename={attachmentFileName}";
             }
 
             return Task.FromResult(new Uri(client.GetPreSignedURL(request)));
