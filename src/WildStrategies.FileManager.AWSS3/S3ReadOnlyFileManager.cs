@@ -28,8 +28,8 @@ namespace WildStrategies.FileManager
         public Task<FileObject> GetFileAsync(string fileName) => ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.First().ToFileObject());
 
         public Task<Uri> GetDownloadFileUriAsync(
-            string fileName, 
-            TimeSpan? expiryTime = null, 
+            string fileName,
+            TimeSpan? expiryTime = null,
             bool toDownload = true,
             string attachmentFileName = null
         )
@@ -112,6 +112,27 @@ namespace WildStrategies.FileManager
 
                 return new FileObjectMetadataCollection(output);
             });
+        }
+
+        public async Task<bool> FileExistsAsync(string fileName)
+        {
+            try
+            {
+                var result = await client.GetObjectAsync(new()
+                {
+                    BucketName = bucketName,
+                    Key = fileName
+                });
+                return true;
+
+            } catch (AmazonS3Exception ex)
+            {
+                return (ex.ErrorCode) switch
+                {
+                    "NoSuchKey" => false,
+                    _ => throw ex
+                };
+            }
         }
     }
 }

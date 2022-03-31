@@ -9,6 +9,7 @@ namespace WildStrategies.FileManager
         IAsyncEnumerable<FileObject> ListFilesAsync();
         IAsyncEnumerable<FileObject> ListFilesAsync(string folder);
         Task<FileObject> GetFileAsync(string fileName);
+        Task<bool> FileExistsAsync(string fileName);
         Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName);
         Task<Uri> GetDownloadFileUriAsync(
             string fileName,
