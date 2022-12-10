@@ -1,4 +1,4 @@
-﻿using Amazon.S3;
+using Amazon.S3;
 using Amazon.S3.Model;
 using System;
 using System.Collections.Generic;
@@ -25,13 +25,14 @@ namespace WildStrategies.FileManager
             TemporaryUrlExpireTime = TimeSpan.FromSeconds(settings.TemporaryUrlExpireTime);
         }
 
-        public Task<FileObject> GetFileAsync(string fileName) => ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.First().ToFileObject());
+        public Task<FileObject?> GetFileAsync(string fileName) => 
+            ListFilesFromAws(prefix: fileName).ContinueWith(x => x.Result.S3Objects.FirstOrDefault()?.ToFileObject());
 
         public Task<Uri> GetDownloadFileUriAsync(
             string fileName,
             TimeSpan? expiryTime = null,
             bool toDownload = true,
-            string attachmentFileName = null
+            string? attachmentFileName = null
         )
         {
             if (fileName is null)
@@ -60,7 +61,7 @@ namespace WildStrategies.FileManager
             return Task.FromResult(new Uri(client.GetPreSignedURL(request)));
         }
 
-        private Task<ListObjectsV2Response> ListFilesFromAws(string prefix = null, string continuationToken = null) => client.ListObjectsV2Async(new Amazon.S3.Model.ListObjectsV2Request()
+        private Task<ListObjectsV2Response> ListFilesFromAws(string? prefix = null, string? continuationToken = null) => client.ListObjectsV2Async(new Amazon.S3.Model.ListObjectsV2Request()
         {
             BucketName = bucketName,
             ContinuationToken = continuationToken,
@@ -69,9 +70,9 @@ namespace WildStrategies.FileManager
 
         public IAsyncEnumerable<FileObject> ListFilesAsync() => ListFilesAsync(null);
 
-        public async IAsyncEnumerable<FileObject> ListFilesAsync(string folder)
+        public async IAsyncEnumerable<FileObject> ListFilesAsync(string? folder)
         {
-            string continuationToken = null;
+            string? continuationToken = null;
             while (true)
             {
                 ListObjectsV2Response response = await ListFilesFromAws(prefix: folder, continuationToken: continuationToken);
@@ -90,7 +91,7 @@ namespace WildStrategies.FileManager
             }
         }
 
-        public Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName)
+        public Task<FileObjectMetadataCollection?> GetFileMetadataAsync(string fileName)
         {
             if (fileName is null)
             {
@@ -110,7 +111,7 @@ namespace WildStrategies.FileManager
                     output.Add(key, task.Result.Metadata[key]);
                 }
 
-                return new FileObjectMetadataCollection(output);
+                return (FileObjectMetadataCollection?)new FileObjectMetadataCollection(output);
             });
         }
 

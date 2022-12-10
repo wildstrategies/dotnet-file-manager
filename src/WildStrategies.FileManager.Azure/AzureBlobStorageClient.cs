@@ -27,14 +27,22 @@ namespace WildStrategies.FileManager
             TemporaryUrlExpireTime = TimeSpan.FromSeconds(settings.TemporaryUrlExpireTime);
         }
 
-        public IAsyncEnumerable<BlobItem> SearchFiles(string prefix) => containerClient.GetBlobsAsync(prefix: prefix, traits: BlobTraits.None);
+        public IAsyncEnumerable<BlobItem> SearchFiles(string? prefix) => 
+            containerClient.GetBlobsAsync(prefix: prefix, traits: BlobTraits.None);
 
-        public Task<FileObject> GetFile(string fileName) => containerClient.GetBlobClient(fileName).GetPropertiesAsync()
-            .ContinueWith(task => task.Result.Value.ToFileObject(fileName));
-
-        public Task<Uri> GetFileUriAsync(string fileName, TimeSpan? expiryTime, string contentDisposition, bool write)
+        public async Task<FileObject?> GetFile(string fileName)
         {
-            BlobSasBuilder builder = new BlobSasBuilder()
+            if (!await containerClient.ExistsAsync())
+            {
+                return null;
+            }
+            return await containerClient.GetBlobClient(fileName).GetPropertiesAsync()
+            .ContinueWith(task => task.Result.Value.ToFileObject(fileName));
+        }
+
+        public Task<Uri> GetFileUriAsync(string fileName, TimeSpan? expiryTime, string? contentDisposition, bool write)
+        {
+            BlobSasBuilder builder = new()
             {
                 StartsOn = DateTimeOffset.UtcNow.AddSeconds(-2),
                 ExpiresOn = DateTimeOffset.UtcNow.Add(expiryTime ?? TemporaryUrlExpireTime),
@@ -57,11 +65,15 @@ namespace WildStrategies.FileManager
             );
         }
 
-        public Task<bool> FileExistsAsync(string fileName) => 
+        public Task<bool> FileExistsAsync(string fileName) =>
             containerClient.GetBlobClient(fileName).ExistsAsync().ContinueWith(task => task.Result.Value);
 
-        public Task<IEnumerable<KeyValuePair<string, string>>> GetBlobMetadata(string fileName) =>
-            containerClient.GetBlobClient(fileName).GetPropertiesAsync().ContinueWith(task => task.Result.Value.Metadata.AsEnumerable());
+        public async Task<IEnumerable<KeyValuePair<string, string>>?> GetBlobMetadata(string fileName)
+        {
+            if (!await containerClient.GetBlobClient(fileName).ExistsAsync())
+                return null;
+            return await containerClient.GetBlobClient(fileName).GetPropertiesAsync().ContinueWith(task => task.Result.Value.Metadata.AsEnumerable());
+        }
 
         public Task<bool> DeleteFileAsync(string fileName)
             => containerClient.GetBlobClient(fileName).DeleteIfExistsAsync().ContinueWith(res => res.Result.Value);

@@ -6,6 +6,6 @@ namespace WildStrategies.FileManager
     public interface IFileManager : IReadOnlyFileManager
     {
         Task DeleteFileAsync(string fileName);
-        Task<Uri?> GetUploadFileUriAsync(string fileName, TimeSpan? expiryTime = null);
+        Task<Uri> GetUploadFileUriAsync(string fileName, TimeSpan? expiryTime = null);
     }
 }

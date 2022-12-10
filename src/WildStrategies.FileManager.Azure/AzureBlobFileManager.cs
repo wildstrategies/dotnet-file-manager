@@ -11,7 +11,7 @@ namespace WildStrategies.FileManager
 
         public Task DeleteFileAsync(string fileName) => client.DeleteFileAsync(fileName);
 
-        public Task<Uri?> GetUploadFileUriAsync(string fileName, TimeSpan? expiryTime = null) =>
+        public Task<Uri> GetUploadFileUriAsync(string fileName, TimeSpan? expiryTime = null) =>
             client.GetFileUriAsync(
                 fileName,
                 expiryTime,
