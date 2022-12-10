@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,9 +10,10 @@ namespace WildStrategies.FileManager.Tests
 {
     public abstract class StorageTestsBase
     {
-        protected static IFileManager service;
+        protected static IFileManager service = null!;
         private static readonly string basePath = ".unit-tests/file-manager";
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly string notExistingFile = "8HBfJJtPs86fd1yWJYstszAkLwzw.fne";
+        private static readonly HttpClient client = new();
         private static readonly Dictionary<Type, FileObject> fileObjects = new Dictionary<Type, FileObject>();
 
         protected async Task<FileObject> GetFirstFile()
@@ -43,14 +44,14 @@ namespace WildStrategies.FileManager.Tests
         [TestMethod]
         public async Task GetFile()
         {
-            FileObject file = await service.GetFileAsync((await GetFirstFile()).FullName);
+            FileObject file = await service.GetFileAsync((await GetFirstFile()).FullName) ?? throw new NullReferenceException();
             Assert.IsNotNull(file);
         }
 
         [TestMethod]
         public async Task FileExistsAsync()
         {
-            FileObject file = await service.GetFileAsync((await GetFirstFile()).FullName);
+            FileObject file = await service.GetFileAsync((await GetFirstFile()).FullName) ?? throw new NullReferenceException();
             var exists = await service.FileExistsAsync(file.FullName);
             Assert.IsTrue(exists);
         }
@@ -58,33 +59,29 @@ namespace WildStrategies.FileManager.Tests
         [TestMethod]
         public async Task FileNotExistsAsync()
         {
-            var exists = await service.FileExistsAsync("8HBfJJtPs86fd1yWJYstszAkLwzw.fne");
+            var exists = await service.FileExistsAsync(notExistingFile);
             Assert.IsFalse(exists);
         }
 
         [TestMethod]
         public async Task GetFileMetadata()
         {
-            FileObjectMetadataCollection metadata = await service.GetFileMetadataAsync((await GetFirstFile()).FullName);
+            FileObjectMetadataCollection metadata = await service.GetFileMetadataAsync((await GetFirstFile()).FullName) ?? throw new NullReferenceException();
             Assert.IsNotNull(metadata);
         }
 
         [TestMethod]
         public async Task GetFileUri()
         {
-            Uri file = await service.GetDownloadFileUriAsync((await GetFirstFile()).FullName, toDownload: true);
+            Uri file = await service.GetDownloadFileUriAsync((await GetFirstFile()).FullName, toDownload: true) ?? throw new NullReferenceException();
             Assert.IsNotNull(file);
-            //var result = await client.GetAsync(file);
-            //result.EnsureSuccessStatusCode();
         }
 
         [TestMethod]
         public async Task GetFileUriNoDownload()
         {
-            Uri file = await service.GetDownloadFileUriAsync((await GetFirstFile()).FullName, toDownload: false);
+            Uri file = await service.GetDownloadFileUriAsync((await GetFirstFile()).FullName, toDownload: false) ?? throw new NullReferenceException();
             Assert.IsNotNull(file);
-            //var result = await client.GetAsync(file);
-            //result.EnsureSuccessStatusCode();
         }
 
         [TestMethod]

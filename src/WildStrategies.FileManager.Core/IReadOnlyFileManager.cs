@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,14 +8,14 @@ namespace WildStrategies.FileManager
     {
         IAsyncEnumerable<FileObject> ListFilesAsync();
         IAsyncEnumerable<FileObject> ListFilesAsync(string folder);
-        Task<FileObject> GetFileAsync(string fileName);
+        Task<FileObject?> GetFileAsync(string fileName);
         Task<bool> FileExistsAsync(string fileName);
-        Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName);
-        Task<Uri> GetDownloadFileUriAsync(
+        Task<FileObjectMetadataCollection?> GetFileMetadataAsync(string fileName);
+        Task<Uri?> GetDownloadFileUriAsync(
             string fileName,
             TimeSpan? expiryTime = null,
             bool toDownload = true,
-            string attachmentFileName = null
+            string? attachmentFileName = null
         );
     }
 }

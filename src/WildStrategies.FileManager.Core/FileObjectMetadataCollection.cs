@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +6,7 @@ namespace WildStrategies.FileManager
 {
     public sealed class FileObjectMetadataCollection : IEnumerable<FileObjectMetadata>
     {
-        private readonly List<FileObjectMetadata> _Collection = new List<FileObjectMetadata>();
+        private readonly List<FileObjectMetadata> _Collection = new();
 
         public FileObjectMetadataCollection(IEnumerable<FileObjectMetadata> values) =>
             _Collection.AddRange(values);
