@@ -32,7 +32,7 @@ namespace WildStrategies.FileManager
 
         public async Task<FileObject?> GetFile(string fileName)
         {
-            if (!await containerClient.ExistsAsync())
+            if (!await containerClient.GetBlobClient(fileName).ExistsAsync())
             {
                 return null;
             }
