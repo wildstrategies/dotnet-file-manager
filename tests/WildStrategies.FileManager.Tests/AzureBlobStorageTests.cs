@@ -1,17 +1,21 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager.Tests
 {
-    //[TestClass]
+    [TestClass]
     public class AzureBlobStorageTests : StorageTestsBase
     {
         [ClassInitialize]
-        public static void Initialize(TestContext context)
+        public async static Task Initialize(TestContext context)
         {
-            service = new AzureBlobFileManager(
-                Utils.Configuration.GetSection("azure").Get<AzureBlobFileManagerSettings>()
+            Service = new AzureBlobFileManager(
+                Utils.Configuration.GetSection("azure").Get<AzureBlobFileManagerSettings>() ?? throw new NullReferenceException()
             );
+
+            await InitEnvironment(context);
         }
     }
 }

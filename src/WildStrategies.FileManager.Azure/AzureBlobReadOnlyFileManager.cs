@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,7 +13,7 @@ namespace WildStrategies.FileManager
             client = new AzureBlobStorageClient(settings);
         }
 
-        private async IAsyncEnumerable<FileObject> ListFilesFromAzure(string prefix)
+        private async IAsyncEnumerable<FileObject> ListFilesFromAzure(string? prefix)
         {
             await foreach (Azure.Storage.Blobs.Models.BlobItem file in client.SearchFiles(prefix))
             {
@@ -23,21 +23,21 @@ namespace WildStrategies.FileManager
 
         public IAsyncEnumerable<FileObject> ListFilesAsync() => ListFilesFromAzure(null);
         public IAsyncEnumerable<FileObject> ListFilesAsync(string folder) => ListFilesFromAzure(folder);
-        public Task<FileObject> GetFileAsync(string fileName) => client.GetFile(fileName);
+        public Task<FileObject?> GetFileAsync(string fileName) => client.GetFile(fileName);
         public Task<Uri> GetDownloadFileUriAsync(
             string fileName, 
             TimeSpan? expiryTime = null, 
             bool toDownload = true,
-            string attachmentFileName = null
+            string? attachmentFileName = null
         )
         {
-            string contentDisposition = null;
+            string? contentDisposition = null;
 
             if (toDownload)
             {
                 if (string.IsNullOrWhiteSpace(attachmentFileName))
                 {
-                    attachmentFileName = fileName.Substring(fileName.LastIndexOf("/") + 1);
+                    attachmentFileName = fileName[(fileName.LastIndexOf("/") + 1)..];
                 }
 
                 contentDisposition = $"attachment; filename={attachmentFileName}";
@@ -51,9 +51,9 @@ namespace WildStrategies.FileManager
             );
         }
 
-        public Task<FileObjectMetadataCollection> GetFileMetadataAsync(string fileName) =>
+        public Task<FileObjectMetadataCollection?> GetFileMetadataAsync(string fileName) =>
             client.GetBlobMetadata(fileName)
-            .ContinueWith(task => new FileObjectMetadataCollection(task.Result), TaskScheduler.Current);
+            .ContinueWith(task => task.Result != null ? new FileObjectMetadataCollection(task.Result) : null, TaskScheduler.Current);
 
         public Task<bool> FileExistsAsync(string fileName) => client.FileExistsAsync(fileName);
     }

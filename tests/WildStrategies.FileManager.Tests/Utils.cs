@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Reflection;
@@ -10,7 +10,7 @@ namespace WildStrategies.FileManager.Tests
     {
         public static async Task<List<FileObject>> ToList(this IAsyncEnumerable<FileObject> files)
         {
-            List<FileObject> output = new List<FileObject>();
+            List<FileObject> output = new();
             await foreach (FileObject file in files)
             {
                 output.Add(file);
@@ -23,8 +23,8 @@ namespace WildStrategies.FileManager.Tests
     [TestClass]
     public class Utils
     {
-        public static TestContext TestContext { get; private set; }
-        public static IConfiguration Configuration { get; private set; }
+        public static TestContext TestContext { get; private set; } = null!;
+        public static IConfiguration Configuration { get; private set; } = null!;
 
         [AssemblyInitialize]
         public static void Initialize(TestContext context)

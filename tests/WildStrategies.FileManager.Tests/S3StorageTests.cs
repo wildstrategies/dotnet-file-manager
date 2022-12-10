@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Threading.Tasks;
 
 namespace WildStrategies.FileManager.Tests
 {
@@ -7,11 +9,13 @@ namespace WildStrategies.FileManager.Tests
     public class S3StorageTests : StorageTestsBase
     {
         [ClassInitialize]
-        public static void Initialize(TestContext context)
+        public static async Task Initialize(TestContext context)
         {
-            service = new S3FileManager(
-                Utils.Configuration.GetSection("aws").Get<S3FileManagerSettings>()
+            Service = new S3FileManager(
+                Utils.Configuration.GetSection("aws").Get<S3FileManagerSettings>() ?? throw new NullReferenceException()
             );
+
+            await InitEnvironment(context);
         }
     }
 }
